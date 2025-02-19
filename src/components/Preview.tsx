@@ -26,9 +26,14 @@ function Preview() {
     const [responses, setResponses] = useState<ResponseState>({});
 
     // Handle input change
-    const handleInputChange = (id: string, questionLabel: string, value: string | number) => {
+    // const handleInputChange = (id: string, questionLabel: string, value: string | number) => {
+    //     setResponses(prev => ({ ...prev, [id]: value }));
+    // };
+
+    const handleInputChange = (id: string, questionLabel: string, value: string | number | string[]) => {
         setResponses(prev => ({ ...prev, [id]: value }));
     };
+    
 
     const handleDeleteQuestion = (id: string) => {
         removeQuestion(id);
@@ -155,15 +160,17 @@ function Preview() {
                                                 <div className="flex items-center space-x-2 p-2">
                                                     <Checkbox
                                                         className="border-white"
-                                                        checked={responses[el.id]?.includes(option) || false}
+                                                        checked={Array.isArray(responses[el.id]) ? (responses[el.id] as string[]).includes(option) : false}
                                                         onCheckedChange={(checked) => {
                                                             let updatedOptions = responses[el.id] || [];
                                                             if (checked) {
-                                                                updatedOptions = [...updatedOptions, option];
+                                                                updatedOptions = Array.isArray(updatedOptions) ? [...updatedOptions, option] : [option];
                                                             } else {
-                                                                updatedOptions = updatedOptions.filter(opt => opt !== option);
+                                                                updatedOptions = Array.isArray(updatedOptions)
+                                                                    ? (updatedOptions as string[]).filter(opt => opt !== option)
+                                                                    : [];
                                                             }
-                                                            handleInputChange(el.id, el?.questionLabel, updatedOptions);
+                                                            handleInputChange(el.id, el?.questionLabel, updatedOptions as string[]);
                                                         }}
                                                     />
                                                     <label
