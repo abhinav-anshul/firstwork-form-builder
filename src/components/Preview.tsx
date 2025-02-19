@@ -33,7 +33,7 @@ function Preview() {
     const handleInputChange = (id: string, questionLabel: string, value: string | number | string[]) => {
         setResponses(prev => ({ ...prev, [id]: value }));
     };
-    
+
 
     const handleDeleteQuestion = (id: string) => {
         removeQuestion(id);
@@ -63,8 +63,11 @@ function Preview() {
             // 2. Validate number fields
             if (q.questionType === "number") {
                 const numValue = Number(value);
-                if (!value || isNaN(numValue) || numValue < q.minValue || numValue > q.maxValue) {
-                    toast.error(`Please enter number between ${q.minValue} and ${q.maxValue}`);
+                const min = q.minValue ?? Number.MIN_SAFE_INTEGER; // Use a very low default if undefined
+                const max = q.maxValue ?? Number.MAX_SAFE_INTEGER; // Use a very high default if undefined
+
+                if (!value || isNaN(numValue) || numValue < min || numValue > max) {
+                    toast.error(`Please enter a number between ${min} and ${max}`);
                     return;
                 }
             }
