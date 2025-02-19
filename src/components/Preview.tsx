@@ -31,6 +31,7 @@ function Preview() {
     // };
 
     const handleInputChange = (id: string, questionLabel: string, value: string | number | string[]) => {
+        console.log({questionLabel});
         setResponses(prev => ({ ...prev, [id]: value }));
     };
 
